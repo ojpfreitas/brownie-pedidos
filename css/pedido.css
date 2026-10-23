@@ -60,8 +60,8 @@ h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.2}
 .sheet-foot.col{flex-direction:column;align-items:stretch}
 .sheet-foot .btn{flex:1}
 .x{position:absolute;z-index:2;top:10px;right:10px;width:36px;height:36px;border:0;border-radius:50%;background:rgba(255,255,255,.92);font-size:1.5rem;line-height:1}
-.m-img{height:200px;display:grid;place-items:center;background:#d9d9d9}
-.m-img img{width:100%;height:100%;object-fit:cover}
+.m-img{position:relative;flex:none;height:220px;overflow:hidden;background:#d9d9d9}
+.m-img img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover}
 .m-img:empty{display:none}
 .grp legend{margin-bottom:6px;font-weight:600}
 .grp{padding:0;border:0}
@@ -103,3 +103,6 @@ h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.2}
 .addr>label:first-child{grid-column:1/-1}
 .ent{padding:10px 14px;border-radius:12px;background:var(--soft);font-weight:600;font-size:.92rem}
 .erro{padding:8px 12px;border-radius:10px;background:#fee2e2}
+
+/* Aviso de pedido mínimo */
+.aviso{padding:8px 12px;border-radius:10px;background:#fef3c7;color:#92400e;font-size:.9rem;font-weight:600}

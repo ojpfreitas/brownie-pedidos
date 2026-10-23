@@ -58,7 +58,7 @@ const txtOpcoes = t => t.split("\n").map(l => l.trim()).filter(Boolean).map(l =>
 async function produtos(){
   try {
     prods = await DB.rest("produtos?order=ordem,nome");
-    $("#cats").innerHTML = [...new Set(prods.map(p => p.categoria))].map(c => `<option value="${esc(c)}">`).join("");
+    $("#cats").innerHTML = [...new Set(["Brownies", "Cookies", "Combos", ...prods.map(p => p.categoria)])].map(c => `<option value="${esc(c)}">`).join("");
     $("#lista-prod").innerHTML = prods.map(p => `<article class="prod ${p.ativo ? "" : "off"}">
       <header><strong>${esc(p.nome)}</strong><span class="tag">${esc(p.categoria)}</span></header>
       <div class="muted">${p.opcoes?.length ? esc(opcoesTxt(p.opcoes)).replace(/\n/g, "<br>") : R$(p.preco)}</div>
@@ -69,9 +69,9 @@ async function produtos(){
 }
 function formProd(p){
   const f = $("#f-prod"), e = f.elements; f.hidden = false; $("#prod-erro").hidden = true;
-  e.id.value = p?.id || ""; e.nome.value = p?.nome || ""; e.categoria.value = p?.categoria || "Brownies";
+  e.id.value = p?.id || ""; e.nome.value = p?.nome || ""; e.categoria.value = p?.categoria || "";
   e.descricao.value = p?.descricao || ""; e.img.value = p?.img || ""; e.preco.value = p?.preco ?? "";
-  e.opcoes.value = opcoesTxt(p?.opcoes); e.ordem.value = p?.ordem ?? 0; f.scrollIntoView({ behavior: "smooth" });
+  e.opcoes.value = opcoesTxt(p?.opcoes); e.ordem.value = p?.ordem ?? (Math.max(0, ...prods.map(x => x.ordem || 0)) + 1); f.scrollIntoView({ behavior: "smooth" });
 }
 $("#novo").onclick = () => formProd();
 $("#cancela").onclick = () => $("#f-prod").hidden = true;

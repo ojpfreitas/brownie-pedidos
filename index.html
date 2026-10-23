@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Peça seu brownie — Brownie por Amanda Gabriel</title>
-<meta name="description" content="Cardápio online de brownies. Escolha, monte a sacola e envie o pedido pelo WhatsApp.">
+<title>Peça seus brownies e cookies — Brownie por Amanda Gabriel</title>
+<meta name="description" content="Cardápio online de brownies e cookies. Escolha, monte a sacola e envie o pedido pelo WhatsApp.">
 <meta name="theme-color" content="#fff8f0">
 <link rel="icon" href="assets/images/icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -98,7 +98,6 @@
       <label class="field">Pagamento
         <select name="pagamento"><option>Pix</option><option>Cartão (na entrega)</option><option>Dinheiro</option></select>
       </label>
-      <p id="erro" class="erro" role="alert" hidden></p>
     </form>
   </div>
   <div class="sheet-foot col">
@@ -107,6 +106,8 @@
       <div id="t-taxa-row"><dt>Taxa de entrega</dt><dd id="t-taxa"></dd></div>
       <div class="tot"><dt>Total</dt><dd id="t-total"></dd></div>
     </dl>
+    <p id="min-aviso" class="aviso" hidden></p>
+    <p id="erro" class="erro" role="alert" hidden></p>
     <button id="enviar" class="btn wa">Enviar pedido pelo WhatsApp</button>
   </div>
 </aside>

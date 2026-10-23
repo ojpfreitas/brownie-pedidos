@@ -95,7 +95,7 @@ function abrirItem(id){
   $("#m-img").innerHTML = atual.img ? `<img src="${esc(atual.img)}" alt="">` : ""; $("#m-obs").value = "";
   $("#m-opts").innerHTML = (atual.opcoes || []).map((g, gi) =>
     `<fieldset class="grp"><legend>${esc(g.grupo)}</legend>` + g.itens.map((o, oi) =>
-      `<label class="opt"><span><input type="radio" name="g${gi}" value="${oi}" ${oi === 0 ? "checked" : ""}>${esc(o.n)}</span><span>${o.p ? "+ " + R$(o.p) : ""}</span></label>`).join("") + "</fieldset>").join("");
+      `<label class="opt"><span><input type="radio" name="g${gi}" value="${oi}" ${oi === 0 ? "checked" : ""}>${esc(o.n)}</span><span>${o.p ? (base(atual) === 0 && gi === 0 ? "" : "+ ") + R$(o.p) : ""}</span></label>`).join("") + "</fieldset>").join("");
   mostrar("#modal"); subM();
 }
 const escolhas = () => (atual.opcoes || []).map((g, gi) => g.itens[+document.querySelector(`input[name=g${gi}]:checked`).value]);
@@ -159,6 +159,9 @@ function sacola(){
     <div class="qty"><button data-i="${i}" data-d="-1" aria-label="Diminuir">−</button><span>${c.qtd}</span><button data-i="${i}" data-d="1" aria-label="Aumentar">+</button></div></li>`).join("");
   $("#t-sub").textContent = R$(subtotal()); $("#t-taxa").textContent = ent || !entrega() ? R$(taxaAtual()) : "informe o bairro";
   $("#t-taxa-row").hidden = !entrega(); $("#t-total").textContent = R$(subtotal() + taxaAtual()); $("#f-end").hidden = !entrega();
+  const falta = LOJA.pedidoMinimo - subtotal(), av = $("#min-aviso");
+  av.hidden = !(cart.length && falta > 0); av.textContent = `Faltam ${R$(falta)} para o pedido mínimo de ${R$(LOJA.pedidoMinimo)}.`;
+  $("#erro").hidden = true; $("#enviar").textContent = DB.on() ? "Finalizar pedido" : "Enviar pedido pelo WhatsApp";
 }
 $("#d-itens").addEventListener("click", e => {
   const b = e.target.closest("button[data-i]"); if (!b) return;
@@ -189,7 +192,9 @@ $("#enviar").onclick = () => {
   if (DB.on()) { // registra no painel sem atrasar o WhatsApp
     fetch(CFG.url + "/rest/v1/pedidos", { method: "POST", keepalive: true,
       headers: DB.headers({ Prefer: "return=minimal" }),
-      body: JSON.stringify({ cliente: v("nome"), tipo: F().tipo.value, endereco: end, pagamento: v("pagamento"), itens: cart, subtotal: subtotal(), taxa, total, prazo }) }).catch(() => {});
+      body: JSON.stringify({ cliente: v("nome"), tipo: F().tipo.value, endereco: end, pagamento: v("pagamento"), itens: cart, subtotal: subtotal(), taxa, total, prazo }) })
+      .then(r => { if (!r.ok) r.text().then(t => console.warn("Pedido não gravado no painel:", r.status, t)); })
+      .catch(e => console.warn("Pedido não gravado no painel:", e));
   }
   if (!window.open(url, "_blank")) location.href = url; // se o navegador bloquear o popup, abre na mesma aba
   cart = []; save(); barra(); fechar();
