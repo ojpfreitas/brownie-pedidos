@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Peça seu brownie — Brownie por Amanda Gabriel</title>
+<meta name="description" content="Cardápio online de brownies. Escolha, monte a sacola e envie o pedido pelo WhatsApp.">
+<meta name="theme-color" content="#fff8f0">
+<link rel="icon" href="assets/images/icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/pedido.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap top-bar">
+    <a class="logo" href="#" aria-label="Brownie por Amanda Gabriel"><img src="assets/images/icon.png" alt=""><span>Brownie</span></a>
+    <label class="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4a6 6 0 1 0 3.7 10.7l4.8 4.8 1.4-1.4-4.8-4.8A6 6 0 0 0 10 4zm0 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8z"/></svg>
+      <input id="busca" type="search" placeholder="Buscar no cardápio" autocomplete="off">
+    </label>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="banner" aria-hidden="true"><img src="assets/images/brownie.jpg" alt=""></section>
+
+  <section class="store" aria-label="Sobre a loja">
+    <img class="store-logo" src="assets/images/icon.png" alt="">
+    <div>
+      <h1>Brownie por Amanda Gabriel</h1>
+      <p id="status" class="status"></p>
+      <ul class="chips">
+        <li id="chip-taxa"></li><li id="chip-tempo"></li><li id="chip-min"></li>
+      </ul>
+    </div>
+  </section>
+
+  <nav id="tabs" class="tabs" aria-label="Categorias"></nav>
+  <div id="menu"></div>
+  <p id="vazio" class="vazio" hidden>Nenhum item encontrado.</p>
+</main>
+
+<footer class="footer">
+  <img src="assets/images/logo.png" width="190" alt="Brownie por Amanda Gabriel" loading="lazy">
+  <p>© 2026 Brownie por Amanda Gabriel · Site criado por <a href="https://instagram.com/ojpfreitas" target="_blank" rel="noopener noreferrer">João Pedro</a></p>
+</footer>
+
+<button id="cart-bar" class="cart-bar" hidden>
+  <span id="cart-qty" class="badge">0</span><span>Ver sacola</span><strong id="cart-total">R$ 0,00</strong>
+</button>
+
+<div id="overlay" class="overlay" hidden></div>
+
+<div id="modal" class="sheet" role="dialog" aria-modal="true" aria-labelledby="m-nome" hidden>
+  <button class="x" data-close aria-label="Fechar">×</button>
+  <div id="m-img" class="m-img"></div>
+  <div class="sheet-body">
+    <h2 id="m-nome"></h2>
+    <p id="m-desc" class="muted"></p>
+    <div id="m-opts"></div>
+    <label class="field">Observações
+      <textarea id="m-obs" rows="2" placeholder="Ex.: sem granulado"></textarea>
+    </label>
+  </div>
+  <div class="sheet-foot">
+    <div class="qty"><button id="m-menos" aria-label="Diminuir">−</button><span id="m-qty">1</span><button id="m-mais" aria-label="Aumentar">+</button></div>
+    <button id="m-add" class="btn">Adicionar <span id="m-sub"></span></button>
+  </div>
+</div>
+
+<aside id="drawer" class="sheet drawer" role="dialog" aria-modal="true" aria-labelledby="d-titulo" hidden>
+  <button class="x" data-close aria-label="Fechar">×</button>
+  <div class="sheet-body">
+    <h2 id="d-titulo">Sua sacola</h2>
+    <ul id="d-itens" class="itens"></ul>
+    <p id="d-vazia" class="muted" hidden>Sua sacola está vazia.</p>
+    <form id="form" novalidate>
+      <label class="field">Seu nome<input name="nome" required autocomplete="name"></label>
+      <fieldset class="field">
+        <legend>Como quer receber?</legend>
+        <label class="radio"><input type="radio" name="tipo" value="entrega" checked> Entrega</label>
+        <label class="radio"><input type="radio" name="tipo" value="retirada"> Retirada</label>
+      </fieldset>
+      <div id="f-end" class="addr">
+        <label class="field">CEP<input name="cep" inputmode="numeric" maxlength="9" placeholder="00000-000" autocomplete="postal-code"></label>
+        <p id="cep-msg" class="muted w3" role="status"></p>
+        <label class="field w2">Rua<input name="rua" autocomplete="address-line1"></label>
+        <label class="field">Número<input name="numero" inputmode="numeric" autocomplete="address-line2"></label>
+        <label class="field">Complemento<input name="compl" placeholder="Apto, bloco"></label>
+        <label class="field">Bairro<input name="bairro" list="bairros" autocomplete="address-level3"></label>
+        <label class="field">Cidade<input name="cidade" autocomplete="address-level2"></label>
+        <datalist id="bairros"></datalist>
+        <p id="ent-info" class="ent w3" hidden></p>
+      </div>
+      <label class="field">Pagamento
+        <select name="pagamento"><option>Pix</option><option>Cartão (na entrega)</option><option>Dinheiro</option></select>
+      </label>
+      <p id="erro" class="erro" role="alert" hidden></p>
+    </form>
+  </div>
+  <div class="sheet-foot col">
+    <dl class="totais">
+      <div><dt>Subtotal</dt><dd id="t-sub"></dd></div>
+      <div id="t-taxa-row"><dt>Taxa de entrega</dt><dd id="t-taxa"></dd></div>
+      <div class="tot"><dt>Total</dt><dd id="t-total"></dd></div>
+    </dl>
+    <button id="enviar" class="btn wa">Enviar pedido pelo WhatsApp</button>
+  </div>
+</aside>
+
+<script src="js/config.js"></script>
+<script src="js/db.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

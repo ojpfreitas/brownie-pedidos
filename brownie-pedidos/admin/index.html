@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Admin — Brownie por Amanda Gabriel</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/pedido.css"><link rel="stylesheet" href="admin.css">
+</head><body>
+<main class="wrap adm">
+  <header class="adm-top"><h1>Painel</h1><button id="sair" class="btn sm ghost" hidden>Sair</button></header>
+
+  <section id="setup" hidden><p>Configure o Supabase em <code>js/config.js</code> (veja <code>supabase.sql</code>) para usar o painel.</p></section>
+
+  <form id="login" hidden class="card">
+    <label class="field">E-mail<input name="email" type="email" required autocomplete="username"></label>
+    <label class="field">Senha<input name="senha" type="password" required autocomplete="current-password"></label>
+    <p id="login-erro" class="erro" hidden></p>
+    <button class="btn">Entrar</button>
+  </form>
+
+  <div id="app" hidden>
+    <nav class="tabs" id="abas">
+      <a href="#pedidos" data-t="pedidos" class="on">Pedidos <span id="novos" class="badge" hidden>0</span></a>
+      <a href="#produtos" data-t="produtos">Produtos</a>
+      <a href="#config" data-t="config">Configurações</a>
+    </nav>
+
+    <section id="t-pedidos"><div id="lista-ped"></div></section>
+
+    <section id="t-produtos" hidden>
+      <button id="novo" class="btn sm">+ Novo produto</button>
+      <form id="f-prod" class="card" hidden>
+        <input type="hidden" name="id">
+        <label class="field">Nome<input name="nome" required></label>
+        <label class="field">Categoria<input name="categoria" required list="cats" value="Brownies"></label><datalist id="cats"></datalist>
+        <label class="field">Descrição<textarea name="descricao" rows="2"></textarea></label>
+        <label class="field">Foto (URL ou caminho, ex.: assets/images/x.jpg)<input name="img"></label>
+        <label class="field">Preço base (R$) — deixe só o preço aqui se não houver opções<input name="preco" inputmode="decimal"></label>
+        <label class="field">Opções (uma linha por grupo)<textarea name="opcoes" rows="3" placeholder="Tamanho: Pequeno=8, Grande=14&#10;Recheio: Brigadeiro=0, Ninho=0"></textarea></label>
+        <p class="muted">Em cada opção, o valor depois do "=" é o preço (some ao preço base). Com opções, deixe o preço base vazio.</p>
+        <label class="field">Ordem na lista<input name="ordem" type="number" value="0"></label>
+        <p id="prod-erro" class="erro" hidden></p>
+        <div class="row"><button class="btn sm">Salvar</button><button type="button" id="cancela" class="btn sm ghost">Cancelar</button></div>
+      </form>
+      <div id="lista-prod"></div>
+    </section>
+
+    <section id="t-config" hidden>
+      <form id="f-cfg" class="card">
+        <label class="field">WhatsApp (com 55 e DDD)<input name="whatsapp" required></label>
+        <label class="field">Taxa de entrega padrão (R$)<input name="taxaEntrega" inputmode="decimal" required></label>
+        <label class="field">Prazo padrão (ex.: 40-60min)<input name="tempo" required></label>
+        <label class="field">Pedido mínimo (R$)<input name="pedidoMinimo" inputmode="decimal" required></label>
+        <label class="field">Taxa e prazo por bairro (uma linha por bairro)<textarea name="zonas" rows="6" placeholder="Centro = 5, 30-40min&#10;Universitário = 8, 45-60min"></textarea></label>
+        <p class="muted">Bairros que não estiverem na lista usam a taxa e o prazo padrão.</p>
+        <p id="cfg-msg" class="muted" role="status"></p>
+        <button class="btn sm">Salvar configurações</button>
+      </form>
+    </section>
+  </div>
+</main>
+<script src="../js/config.js"></script><script src="../js/db.js"></script><script src="admin.js"></script>
+</body></html>

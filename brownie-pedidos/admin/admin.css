@@ -1,0 +1,16 @@
+.adm{padding:20px 0 60px;max-width:760px}
+.adm-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.card{display:grid;gap:12px;margin:14px 0;padding:18px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}
+.btn.sm{padding:9px 18px;font-size:.92rem}
+.btn.ghost{background:none;color:var(--ink);border:2px solid var(--line)}
+.btn.ghost:hover{background:var(--soft)}
+.btn.red{background:#b91c1c}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.tabs{position:static;margin-top:0}
+.ped,.prod{margin:14px 0;padding:16px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);display:grid;gap:6px}
+.ped.novo{border-color:var(--accent);box-shadow:0 0 0 2px var(--soft)}
+.ped header,.prod header{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.ped ul{margin:4px 0;padding-left:18px}
+.ped select{padding:8px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.tag{padding:2px 10px;border-radius:99px;background:var(--soft);font-size:.8rem;font-weight:600}
+.off{opacity:.55}
