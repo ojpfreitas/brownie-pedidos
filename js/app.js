@@ -3,7 +3,7 @@ const LOJA = {
   whatsapp: "5548991276281",
   taxaEntrega: 5.0,
   tempo: "40-60min",
-  pedidoMinimo: 20.0,
+  pedidoMinimo: 12.0,
   zonas: [], // [{bairro, taxa, tempo}] — editável no admin
   horarios: { 1:[9,19], 2:[9,19], 3:[9,19], 4:[9,19], 5:[9,19], 6:[9,17] } // 0=dom ... 6=sáb
 };
