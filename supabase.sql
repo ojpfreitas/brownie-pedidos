@@ -34,7 +34,7 @@ insert into produtos (id, categoria, nome, descricao, img, preco, opcoes, ordem)
  ('b-trad','Brownies','Brownie Tradicional','Brownie de chocolate macio por dentro, com casquinha crocante e cobertura de chocolate.','assets/images/brownie.jpg',null,'[{"grupo":"Tamanho","itens":[{"n":"Pequeno","p":8},{"n":"Grande","p":14}]}]',1),
  ('b-rech','Brownies','Brownie Recheado','Brownie com recheio cremoso. Escolha o tamanho e o recheio.','',null,'[{"grupo":"Tamanho","itens":[{"n":"Pequeno","p":10},{"n":"Grande","p":17}]},{"grupo":"Recheio","itens":[{"n":"Brigadeiro","p":0},{"n":"Ninho","p":0}]}]',2),
  ('c-box','Combos','Box com 4 brownies','Quatro brownies pequenos tradicionais, ótimo para dividir.','',30,'[]',3);
-insert into config (id, dados) values (1, '{"whatsapp":"5548991276281","taxaEntrega":5,"tempo":"40-60min","pedidoMinimo":20,"zonas":[]}');
+insert into config (id, dados) values (1, '{"whatsapp":"5548991276281","tempo":"40-60min","pedidoMinimo":12,"zonas":[]}');
 
 -- Depois: Authentication → Users → Add user (e-mail e senha da Amanda).
 -- E em Authentication → Sign In / Providers → Email, DESLIGUE "Allow new users to sign up",

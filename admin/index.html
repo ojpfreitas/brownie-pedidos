@@ -48,11 +48,10 @@
     <section id="t-config" hidden>
       <form id="f-cfg" class="card">
         <label class="field">WhatsApp (com 55 e DDD)<input name="whatsapp" required></label>
-        <label class="field">Taxa de entrega padrão (R$)<input name="taxaEntrega" inputmode="decimal" required></label>
         <label class="field">Prazo padrão (ex.: 40-60min)<input name="tempo" required></label>
         <label class="field">Pedido mínimo (R$)<input name="pedidoMinimo" inputmode="decimal" required></label>
-        <label class="field">Taxa e prazo por bairro (uma linha por bairro)<textarea name="zonas" rows="6" placeholder="Centro = 5, 30-40min&#10;Universitário = 8, 45-60min"></textarea></label>
-        <p class="muted">Bairros que não estiverem na lista usam a taxa e o prazo padrão.</p>
+        <label class="field">Prazo por bairro (uma linha por bairro)<textarea name="zonas" rows="6" placeholder="Centro = 30-40min&#10;Universitário = 45-60min"></textarea></label>
+        <p class="muted">Bairros fora da lista usam o prazo padrão. O valor da entrega é sempre combinado pelo WhatsApp.</p>
         <p id="cfg-msg" class="muted" role="status"></p>
         <button class="btn sm">Salvar configurações</button>
       </form>

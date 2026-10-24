@@ -1,10 +1,9 @@
 /* Valores padrão — se o Supabase estiver configurado, o que está no admin tem prioridade. */
 const LOJA = {
   whatsapp: "5548991276281",
-  taxaEntrega: 5.0,
   tempo: "40-60min",
   pedidoMinimo: 12.0,
-  zonas: [], // [{bairro, taxa, tempo}] — editável no admin
+  zonas: [], // [{bairro, tempo}] — prazo por bairro, editável no admin
   horarios: { 1:[9,19], 2:[9,19], 3:[9,19], 4:[9,19], 5:[9,19], 6:[9,17] } // 0=dom ... 6=sáb
 };
 let CARDAPIO = [
@@ -47,7 +46,7 @@ async function carregar(){
     } catch(e) { console.warn("Usando dados padrão:", e.message); }
   }
   todos = CARDAPIO.flatMap(c => c.itens);
-  $("#chip-taxa").textContent = "Entrega a partir de " + R$(Math.min(LOJA.taxaEntrega, ...LOJA.zonas.map(z => z.taxa)));
+  $("#chip-taxa").textContent = "Entrega a combinar";
   $("#chip-tempo").textContent = LOJA.tempo;
   $("#chip-min").textContent = "Mín. " + R$(LOJA.pedidoMinimo);
   $("#bairros").innerHTML = LOJA.zonas.map(z => `<option value="${esc(z.bairro)}">`).join("");
@@ -118,8 +117,8 @@ function calcEntrega(){
   const b = norm(F().bairro.value), info = $("#ent-info");
   if (!entrega() || !b) { ent = null; info.hidden = true; return; }
   const z = LOJA.zonas.find(z => norm(z.bairro) === b);
-  ent = z ? { taxa: z.taxa, tempo: z.tempo || LOJA.tempo } : { taxa: LOJA.taxaEntrega, tempo: LOJA.tempo };
-  info.textContent = `Entrega em ${F().bairro.value.trim()}: ${R$(ent.taxa)} · prazo ${ent.tempo}`;
+  ent = { tempo: (z && z.tempo) || LOJA.tempo };
+  info.textContent = `Prazo estimado para ${F().bairro.value.trim()}: ${ent.tempo}`;
   info.hidden = false;
 }
 async function buscarCep(){
@@ -147,7 +146,6 @@ $("#form").addEventListener("change", () => { calcEntrega(); sacola(); });
 
 /* ---------- Sacola ---------- */
 const subtotal = () => cart.reduce((s, c) => s + c.un * c.qtd, 0);
-const taxaAtual = () => entrega() ? (ent ? ent.taxa : LOJA.taxaEntrega) : 0;
 function barra(){
   const q = cart.reduce((s, c) => s + c.qtd, 0);
   $("#cart-bar").hidden = q === 0; $("#cart-qty").textContent = q; $("#cart-total").textContent = R$(subtotal());
@@ -157,8 +155,8 @@ function sacola(){
   $("#d-itens").innerHTML = cart.map((c, i) => `<li><span>${esc(c.nome)}</span><b>${R$(c.un * c.qtd)}</b>
     ${c.ops ? `<small>${esc(c.ops)}</small>` : ""}${c.obs ? `<small>Obs.: ${esc(c.obs)}</small>` : ""}
     <div class="qty"><button data-i="${i}" data-d="-1" aria-label="Diminuir">−</button><span>${c.qtd}</span><button data-i="${i}" data-d="1" aria-label="Aumentar">+</button></div></li>`).join("");
-  $("#t-sub").textContent = R$(subtotal()); $("#t-taxa").textContent = ent || !entrega() ? R$(taxaAtual()) : "informe o bairro";
-  $("#t-taxa-row").hidden = !entrega(); $("#t-total").textContent = R$(subtotal() + taxaAtual()); $("#f-end").hidden = !entrega();
+  $("#t-sub").textContent = R$(subtotal()); $("#t-taxa").textContent = "a combinar no WhatsApp";
+  $("#t-taxa-row").hidden = !entrega(); $("#t-total").textContent = R$(subtotal()); $("#f-end").hidden = !entrega();
   const falta = LOJA.pedidoMinimo - subtotal(), av = $("#min-aviso");
   av.hidden = !(cart.length && falta > 0); av.textContent = `Faltam ${R$(falta)} para o pedido mínimo de ${R$(LOJA.pedidoMinimo)}.`;
   $("#erro").hidden = true; $("#enviar").textContent = DB.on() ? "Finalizar pedido" : "Enviar pedido pelo WhatsApp";
@@ -180,19 +178,19 @@ $("#enviar").onclick = () => {
   if (!v("nome")) return falha("Informe seu nome.");
   if (entrega() && !(v("rua") && v("numero") && v("bairro"))) return falha("Preencha rua, número e bairro (ou digite o CEP).");
   if (subtotal() < LOJA.pedidoMinimo) return falha(`O pedido mínimo é ${R$(LOJA.pedidoMinimo)}. Faltam ${R$(LOJA.pedidoMinimo - subtotal())}.`);
-  const taxa = taxaAtual(), total = subtotal() + taxa;
+  const total = subtotal();
   const end = entrega() ? `${v("rua")}, ${v("numero")}${v("compl") ? " - " + v("compl") : ""} - ${v("bairro")}, ${v("cidade")}${v("cep") ? " (CEP " + v("cep") + ")" : ""}` : "";
   const prazo = entrega() ? (ent?.tempo || LOJA.tempo) : "Retirada";
   const linhas = cart.map(c => `• ${c.qtd}x ${c.nome}${c.ops ? " (" + c.ops + ")" : ""} — ${R$(c.un * c.qtd)}${c.obs ? "\n   Obs.: " + c.obs : ""}`);
   const msg = ["Olá! Quero fazer um pedido:", "", ...linhas, "", `Subtotal: ${R$(subtotal())}`,
-    entrega() ? `Taxa de entrega: ${R$(taxa)}` : "Retirada no local", `*Total: ${R$(total)}*`, "",
+    entrega() ? "Entrega: valor a combinar pelo WhatsApp" : "Retirada no local", `*Total dos produtos: ${R$(total)}*`, "",
     `Nome: ${v("nome")}`, entrega() ? `Endereço: ${end}` : null, entrega() ? `Prazo estimado: ${prazo}` : null, `Pagamento: ${v("pagamento")}`]
     .filter(l => l !== null).join("\n");
   const url = `https://wa.me/${LOJA.whatsapp}?text=${encodeURIComponent(msg)}`;
   if (DB.on()) { // registra no painel sem atrasar o WhatsApp
     fetch(CFG.url + "/rest/v1/pedidos", { method: "POST", keepalive: true,
       headers: DB.headers({ Prefer: "return=minimal" }),
-      body: JSON.stringify({ cliente: v("nome"), tipo: F().tipo.value, endereco: end, pagamento: v("pagamento"), itens: cart, subtotal: subtotal(), taxa, total, prazo }) })
+      body: JSON.stringify({ cliente: v("nome"), tipo: F().tipo.value, endereco: end, pagamento: v("pagamento"), itens: cart, subtotal: subtotal(), taxa: null, total, prazo }) })
       .then(r => { if (!r.ok) r.text().then(t => console.warn("Pedido não gravado no painel:", r.status, t)); })
       .catch(e => console.warn("Pedido não gravado no painel:", e));
   }

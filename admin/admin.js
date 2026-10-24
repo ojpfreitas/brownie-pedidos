@@ -38,7 +38,7 @@ async function pedidos(){
       <header><strong>#${p.id} · ${esc(p.cliente)}</strong><small>${new Date(p.criado_em).toLocaleString("pt-BR")}</small></header>
       <ul>${(p.itens || []).map(i => `<li>${i.qtd}x ${esc(i.nome)}${i.ops ? " (" + esc(i.ops) + ")" : ""}${i.obs ? " — " + esc(i.obs) : ""}</li>`).join("")}</ul>
       <div>${p.tipo === "entrega" ? "Entrega: " + esc(p.endereco) + " · prazo " + esc(p.prazo) : "Retirada no local"}</div>
-      <div>Pagamento: ${esc(p.pagamento)} · Taxa ${R$(p.taxa)} · <strong>Total ${R$(p.total)}</strong></div>
+      <div>Pagamento: ${esc(p.pagamento)} · Entrega a combinar · <strong>Total ${R$(p.total)}</strong></div>
       <label>Status <select data-id="${p.id}">${Object.entries(STATUS).map(([k, v]) => `<option value="${k}" ${p.status === k ? "selected" : ""}>${v}</option>`).join("")}</select></label>
     </article>`).join("") || '<p class="muted">Nenhum pedido ainda.</p>';
   } catch(e) { tratar(e); }
@@ -100,18 +100,18 @@ $("#lista-prod").onclick = async e => {
 async function config(){
   try {
     const d = (await DB.rest("config?id=eq.1"))[0]?.dados || {}, e = $("#f-cfg").elements;
-    e.whatsapp.value = d.whatsapp || "5548991276281"; e.taxaEntrega.value = d.taxaEntrega ?? 5; e.tempo.value = d.tempo || "40-60min";
+    e.whatsapp.value = d.whatsapp || "5548991276281"; e.tempo.value = d.tempo || "40-60min";
     e.pedidoMinimo.value = d.pedidoMinimo ?? 20;
-    e.zonas.value = (d.zonas || []).map(z => `${z.bairro} = ${z.taxa}, ${z.tempo}`).join("\n");
+    e.zonas.value = (d.zonas || []).map(z => `${z.bairro} = ${z.tempo}`).join("\n");
   } catch(x) { tratar(x); }
 }
 $("#f-cfg").onsubmit = async ev => {
   ev.preventDefault(); const e = ev.target.elements;
   const zonas = e.zonas.value.split("\n").map(l => l.trim()).filter(Boolean).map(l => {
-    const [b, r = ""] = l.split("="), [t, ...tp] = r.split(",");
-    return { bairro: b.trim(), taxa: num(t), tempo: tp.join(",").trim() };
+    const [b, ...r] = l.split("=");
+    return { bairro: b.trim(), tempo: r.join("=").trim() };
   });
-  const dados = { whatsapp: e.whatsapp.value.replace(/\D/g, ""), taxaEntrega: num(e.taxaEntrega.value), tempo: e.tempo.value.trim(), pedidoMinimo: num(e.pedidoMinimo.value), zonas };
+  const dados = { whatsapp: e.whatsapp.value.replace(/\D/g, ""), tempo: e.tempo.value.trim(), pedidoMinimo: num(e.pedidoMinimo.value), zonas };
   try {
     await DB.rest("config", { method: "POST", headers: { Prefer: "resolution=merge-duplicates,return=minimal" }, body: JSON.stringify({ id: 1, dados }) });
     $("#cfg-msg").textContent = "Salvo.";

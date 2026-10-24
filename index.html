@@ -93,7 +93,8 @@
         <label class="field">Bairro<input name="bairro" list="bairros" autocomplete="address-level3"></label>
         <label class="field">Cidade<input name="cidade" autocomplete="address-level2"></label>
         <datalist id="bairros"></datalist>
-        <p id="ent-info" class="ent w3" hidden></p>
+        <p class="ent w3">O valor da entrega é combinado pelo WhatsApp.</p>
+        <p id="ent-info" class="muted w3" hidden></p>
       </div>
       <label class="field">Pagamento
         <select name="pagamento"><option>Pix</option><option>Cartão (na entrega)</option><option>Dinheiro</option></select>
@@ -103,8 +104,8 @@
   <div class="sheet-foot col">
     <dl class="totais">
       <div><dt>Subtotal</dt><dd id="t-sub"></dd></div>
-      <div id="t-taxa-row"><dt>Taxa de entrega</dt><dd id="t-taxa"></dd></div>
-      <div class="tot"><dt>Total</dt><dd id="t-total"></dd></div>
+      <div id="t-taxa-row"><dt>Entrega</dt><dd id="t-taxa"></dd></div>
+      <div class="tot"><dt>Total dos produtos</dt><dd id="t-total"></dd></div>
     </dl>
     <p id="min-aviso" class="aviso" hidden></p>
     <p id="erro" class="erro" role="alert" hidden></p>
