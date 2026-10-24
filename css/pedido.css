@@ -41,7 +41,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.2}
 .thumb svg{width:64px;height:64px;fill:none;stroke:#9a9a9a;stroke-width:1.5}
 .info{display:flex;flex-direction:column;gap:4px;min-width:0}
 .info h3{font:600 1.05rem var(--sans)}
-.info p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;color:var(--muted);font-size:.9rem}
+.info p{display:-webkit-box;-webkit-line-clamp:3;line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;color:var(--muted);font-size:.9rem}
 .info b{margin-top:auto;font-weight:600}
 .vazio{padding:60px 0;text-align:center;color:var(--muted)}
 
