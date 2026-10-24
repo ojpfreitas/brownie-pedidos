@@ -106,3 +106,9 @@ h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.2}
 
 /* Aviso de pedido mínimo */
 .aviso{padding:8px 12px;border-radius:10px;background:#fef3c7;color:#92400e;font-size:.9rem;font-weight:600}
+
+/* Celular: 100vh inclui a barra do navegador e empurra o botão de finalizar para fora da tela.
+   100dvh usa só a área realmente visível. */
+.sheet{max-height:92vh;max-height:92dvh}
+.drawer{height:100vh;height:100dvh;max-height:100vh;max-height:100dvh}
+.sheet-foot{padding-bottom:max(14px,env(safe-area-inset-bottom))}
